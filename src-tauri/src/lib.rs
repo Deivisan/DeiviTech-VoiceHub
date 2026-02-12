@@ -115,7 +115,8 @@ pub fn run() {
                         .build(),
                 )?;
 
-            app.global_shortcut().register("Super+H")?;
+            // Temporarily commented out - hotkey conflict with system
+            // app.global_shortcut().register("Super+H")?;
 
             Ok(())
         })

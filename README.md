@@ -29,11 +29,52 @@ Sistema profissional de ditado de voz em tempo real para Linux, usando **Web Spe
 
 ### Desktop App (Fase 3 - ✅ Completa)
 - ✅ **Global Hotkeys** - `Super+H` inicia/para gravação de qualquer lugar
+- ✅ **Build de Produção** - Binário nativo 15MB + instaladores .deb e .rpm
 - ⏳ **Auto-start** com systemd (implementação futura)
 
 ---
 
 ## 🚀 Instalação Rápida
+
+### Opção 1: Instaladores Pré-Compilados (.deb / .rpm)
+
+**Baixe a versão mais recente:**
+https://github.com/Deivisan/DeiviTech-VoiceHub/releases/latest
+
+#### Debian/Ubuntu (.deb)
+```bash
+# Baixe o arquivo .deb da release
+wget https://github.com/Deivisan/DeiviTech-VoiceHub/releases/download/v0.0.1-pre-alpha/DeiviTech_VoiceHub_0.0.1-pre-alpha_amd64.deb
+
+# Instale
+sudo dpkg -i DeiviTech_VoiceHub_0.0.1-pre-alpha_amd64.deb
+
+# Instale dependências faltantes (se houver)
+sudo apt-get install -f
+```
+
+#### Fedora/RHEL (.rpm)
+```bash
+# Baixe o arquivo .rpm da release
+wget https://github.com/Deivisan/DeiviTech-VoiceHub/releases/download/v0.0.1-pre-alpha/DeiviTech_VoiceHub-0.0.1-pre-alpha-1.x86_64.rpm
+
+# Instale
+sudo rpm -i DeiviTech_VoiceHub-0.0.1-pre-alpha-1.x86_64.rpm
+```
+
+#### Arch Linux
+```bash
+# Extraia o .deb e instale manualmente (ou converta para .pkg.tar.zst)
+# OU compile do código-fonte (veja Opção 2)
+```
+
+**Importante**: Após instalar, adicione seu usuário ao grupo `input` para ydotool funcionar:
+```bash
+sudo usermod -aG input $USER
+# Faça logout e login novamente
+```
+
+### Opção 2: Compilar do Código-Fonte
 
 ### Requisitos
 
@@ -75,7 +116,7 @@ cd DeiviTech-VoiceHub
 bun run dev
 ```
 
-Abra [http://localhost:3030](http://localhost:3030) no Chrome/Edge.
+Abra [http://localhost:5001](http://localhost:5001) no Chrome/Edge.
 
 #### Desktop App (Tauri)
 
@@ -281,11 +322,23 @@ recognition.onresult = (event) => {
 - [x] Listener Tauri no backend
 - [x] Event emitter para frontend
 - [x] Documentação atualizada
-- [ ] Hotkey configurável via settings (futuro)
-- [ ] Build de produção + instaladores (.deb, .rpm, .AppImage)
+
+### Fase 4: Build de Produção + Release ✅ (Completo - 12/02/2026)
+- [x] Build de produção otimizada (`cargo tauri build`)
+- [x] Binário nativo standalone (15MB)
+- [x] Instalador .deb para Debian/Ubuntu (4.3MB)
+- [x] Instalador .rpm para Fedora/RHEL (4.3MB)
+- [x] Release pública no GitHub (v0.0.1-pre-alpha)
+- [x] Repositório público: https://github.com/Deivisan/DeiviTech-VoiceHub
+- [ ] Instalador .AppImage (pendente - investigação necessária)
+
+### Fase 5: Melhorias UX (Em Andamento)
+- [ ] Botão "Type Text" no frontend (integrar `inject_text` command)
+- [ ] Menu completo no system tray (Start/Stop/Settings/Quit)
+- [ ] Hotkey configurável via settings (Ctrl+Alt+V, Super+Shift+R, etc.)
 - [ ] Auto-start com systemd
 
-### Fase 4: Features Avançadas (Futuro)
+### Fase 6: Features Avançadas (Futuro)
 - [ ] Multi-sessões com tabs
 - [ ] Integração com AI agents (GPT-4o/Claude para refinamento)
 - [ ] Export para arquivos (.txt, .md, .docx)

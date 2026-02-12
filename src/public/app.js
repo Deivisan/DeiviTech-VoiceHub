@@ -40,7 +40,14 @@ class VoiceHub {
                 }
             });
 
+            // Show inject_text button only in Tauri desktop app
+            const injectBtn = document.getElementById('injectBtn');
+            if (injectBtn) {
+                injectBtn.style.display = 'flex';
+            }
+
             console.log('✅ Tauri global hotkey listener registered (Super+H)');
+            console.log('✅ Inject text button enabled');
         }
     }
 
@@ -50,6 +57,7 @@ class VoiceHub {
         document.getElementById('stopBtn').addEventListener('click', () => this.stopRecording());
         document.getElementById('copyBtn').addEventListener('click', () => this.copyToClipboard());
         document.getElementById('clearBtn').addEventListener('click', () => this.clearEditor());
+        document.getElementById('injectBtn').addEventListener('click', () => this.injectText());
 
         // Settings toggle - FIX: Actually toggle visibility
         document.getElementById('settingsToggle').addEventListener('click', () => {
@@ -430,6 +438,35 @@ class VoiceHub {
             language: document.getElementById('language').value
         };
         localStorage.setItem('voicehub_settings', JSON.stringify(settings));
+    }
+
+    // Tauri-only: Inject text into system using ydotool
+    async injectText() {
+        if (!window.__TAURI__) {
+            this.showToast('❌ Função disponível apenas no app desktop', 'error');
+            return;
+        }
+
+        const text = document.getElementById('editor').value.trim();
+        
+        if (!text) {
+            this.showToast('⚠️ Nenhum texto para digitar', 'warning');
+            return;
+        }
+
+        try {
+            const { invoke } = window.__TAURI__.core;
+            
+            // Call Tauri command inject_text
+            const result = await invoke('inject_text', { text });
+            
+            this.showToast(`✅ ${result}`, 'success');
+            console.log('✅ Text injected successfully:', result);
+            
+        } catch (error) {
+            this.showToast(`❌ Erro: ${error}`, 'error');
+            console.error('❌ Inject text failed:', error);
+        }
     }
 }
 
