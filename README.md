@@ -10,6 +10,7 @@ Sistema profissional de ditado de voz em tempo real para Linux, usando **Web Spe
 
 ## ✨ Features
 
+### Web App (Fase 1 - ✅ Completa)
 - ✅ **Transcrição em tempo real** com Web Speech API (Chrome/Edge)
 - ✅ **100% gratuito** - sem API keys, sem limites de taxa
 - ✅ **Pontuação automática** (vírgulas, pontos, interrogações)
@@ -20,6 +21,14 @@ Sistema profissional de ditado de voz em tempo real para Linux, usando **Web Spe
 - ✅ **Visualizador de áudio** em tempo real
 - ✅ **Zero configuração** - funciona out-of-the-box
 
+### Desktop App (Fase 2 - ✅ Completa)
+- ✅ **Tauri Desktop App** com WebView nativo
+- ✅ **System Tray** com ícone e menu (mostrar/ocultar)
+- ✅ **Comandos Tauri** para injeção de texto via `ydotool`
+- ✅ **Binário nativo** (~10MB vs 200MB+ do Electron)
+- ⏳ **Global Hotkeys** (Super+H para gravar - implementação futura)
+- ⏳ **Auto-start** com systemd (implementação futura)
+
 ---
 
 ## 🚀 Instalação Rápida
@@ -27,8 +36,10 @@ Sistema profissional de ditado de voz em tempo real para Linux, usando **Web Spe
 ### Requisitos
 
 - **Bun** 1.0+ (runtime JavaScript ultra-rápido)
+- **Rust** 1.77+ (para Tauri desktop app)
 - **Chrome** ou **Edge** (Web Speech API)
 - **Linux** (Arch, Ubuntu, Fedora, etc.)
+- **ydotool** (para injeção de texto no desktop app)
 
 ### Instalar Bun (se não tiver)
 
@@ -36,7 +47,25 @@ Sistema profissional de ditado de voz em tempo real para Linux, usando **Web Spe
 curl -fsSL https://bun.sh/install | bash
 ```
 
+### Instalar Rust (se não tiver)
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+### Instalar dependências do sistema (Arch Linux)
+
+```bash
+sudo pacman -S webkit2gtk-4.1 libayatana-appindicator ydotool
+
+# Adicionar usuário ao grupo input (necessário para ydotool)
+sudo usermod -aG input $USER
+# Faça logout e login novamente para aplicar
+```
+
 ### Clonar e Rodar
+
+#### Web App (Desenvolvimento)
 
 ```bash
 git clone https://github.com/deivisan/DeiviTech-VoiceHub.git
@@ -45,6 +74,15 @@ bun run dev
 ```
 
 Abra [http://localhost:3030](http://localhost:3030) no Chrome/Edge.
+
+#### Desktop App (Tauri)
+
+```bash
+cd DeiviTech-VoiceHub
+cargo tauri dev
+```
+
+Isso abrirá o app desktop nativo com system tray integrado.
 
 ---
 
@@ -84,10 +122,17 @@ Abra [http://localhost:3030](http://localhost:3030) no Chrome/Edge.
 DeiviTech-VoiceHub/
 ├── src/
 │   ├── public/
-│   │   ├── index.html    # Interface web
-│   │   └── app.js        # Lógica Web Speech API
-│   ├── server.ts         # Servidor Bun HTTP
-│   └── desktop/          # (Futuro) Tauri desktop app
+│   │   ├── index.html    # Interface web (497 linhas)
+│   │   └── app.js        # Lógica Web Speech API (488 linhas)
+│   ├── server.ts         # Servidor Bun HTTP (158 linhas)
+│   └── desktop/          # (Reservado para futuras extensões)
+├── src-tauri/            # Desktop app Tauri
+│   ├── src/
+│   │   ├── lib.rs        # Lógica principal (system tray, comandos)
+│   │   └── main.rs       # Entry point
+│   ├── icons/            # Ícones do app (gerados automaticamente)
+│   ├── Cargo.toml        # Dependências Rust
+│   └── tauri.conf.json   # Configuração Tauri
 ├── scripts/              # Scripts de instalação
 ├── docs/                 # Documentação
 ├── package.json
@@ -98,9 +143,19 @@ DeiviTech-VoiceHub/
 
 ## 🛠️ Scripts Disponíveis
 
+### Web App
+
 ```bash
 bun run dev      # Iniciar servidor de desenvolvimento
 bun run start    # Iniciar servidor de produção
+```
+
+### Desktop App (Tauri)
+
+```bash
+cargo tauri dev        # Modo desenvolvimento (hot-reload)
+cargo tauri build      # Build de produção (gera binário + instaladores)
+cargo tauri icon       # Regenerar ícones do app
 ```
 
 ---
@@ -145,20 +200,24 @@ recognition.onresult = (event) => {
 
 ## 🔮 Roadmap Futuro
 
-### Fase 1: Refatoração Web ✅ (Completo)
+### Fase 1: Refatoração Web ✅ (Completo - 12/02/2026)
 - [x] Remover Groq/Hybrid (só Web Speech)
 - [x] Fixar bug de repetição de texto
 - [x] Remover confirmações
 - [x] Interface mobile-responsive
 - [x] Settings funcionando
 
-### Fase 2: Linux Desktop App (Em Breve)
-- [ ] Ícone na system tray (COSMIC DE/Wayland)
-- [ ] Hotkey global (Super+H configurável)
-- [ ] Injeção de texto em janelas ativas (`ydotool`)
-- [ ] Empacotamento Tauri (binário nativo)
+### Fase 2: Linux Desktop App ✅ (Completo - 12/02/2026)
+- [x] Tauri desktop app inicializado
+- [x] System tray com ícone e menu
+- [x] Comandos Tauri para `ydotool` (injeção de texto)
+- [x] Configuração completa (Cargo.toml + tauri.conf.json)
+- [x] Compilação funcionando
+- [ ] Hotkey global (Super+H configurável) - **Próximo passo**
+- [ ] Build de produção + instaladores (.deb, .rpm, .AppImage)
+- [ ] Auto-start com systemd
 
-### Fase 3: Features Avançadas
+### Fase 3: Features Avançadas (Futuro)
 - [ ] Multi-sessões com tabs
 - [ ] Integração com AI agents (GPT-4o/Claude para refinamento)
 - [ ] Export para arquivos (.txt, .md, .docx)
@@ -201,7 +260,10 @@ MIT License - veja [LICENSE](LICENSE) para detalhes.
 
 - **Web Speech API** (Google) - Motor de transcrição gratuito
 - **Bun** - Runtime JavaScript mais rápido do mundo
+- **Tauri** - Framework desktop nativo e leve
+- **Rust** - Linguagem de sistemas segura e performática
 - **COSMIC DE** - Desktop environment moderno para Linux
+- **ydotool** - Text injection para Wayland
 
 ---
 
