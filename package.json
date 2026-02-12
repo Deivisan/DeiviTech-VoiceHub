@@ -1,0 +1,29 @@
+{
+  "name": "deivi tech-voicehub",
+  "version": "0.1.0",
+  "description": "🎤 Sistema de ditado de voz em tempo real com Web Speech API - 100% gratuito e offline",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run src/server.ts",
+    "start": "bun run src/server.ts",
+    "build": "echo 'No build needed - vanilla JS!' && exit 0"
+  },
+  "keywords": [
+    "voice",
+    "dictation",
+    "speech-to-text",
+    "web-speech-api",
+    "bun",
+    "linux",
+    "wayland"
+  ],
+  "author": "Deivison Santana <@deivisan>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deivisan/DeiviTech-VoiceHub.git"
+  },
+  "engines": {
+    "bun": ">=1.0.0"
+  }
+}

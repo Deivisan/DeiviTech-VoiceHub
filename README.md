@@ -1,1 +1,214 @@
 # 🎤 DeiviTech VoiceHub
+
+Sistema profissional de ditado de voz em tempo real para Linux, usando **Web Speech API** (100% gratuito e local).
+
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Bun](https://img.shields.io/badge/runtime-Bun-yellow.svg)
+![Platform](https://img.shields.io/badge/platform-Linux-green.svg)
+
+---
+
+## ✨ Features
+
+- ✅ **Transcrição em tempo real** com Web Speech API (Chrome/Edge)
+- ✅ **100% gratuito** - sem API keys, sem limites de taxa
+- ✅ **Pontuação automática** (vírgulas, pontos, interrogações)
+- ✅ **Multi-idiomas** (8 idiomas suportados)
+- ✅ **Interface minimalista** e responsiva (desktop + mobile)
+- ✅ **Auto-save** de sessões (localStorage)
+- ✅ **Atalhos de teclado** para workflow ágil
+- ✅ **Visualizador de áudio** em tempo real
+- ✅ **Zero configuração** - funciona out-of-the-box
+
+---
+
+## 🚀 Instalação Rápida
+
+### Requisitos
+
+- **Bun** 1.0+ (runtime JavaScript ultra-rápido)
+- **Chrome** ou **Edge** (Web Speech API)
+- **Linux** (Arch, Ubuntu, Fedora, etc.)
+
+### Instalar Bun (se não tiver)
+
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+
+### Clonar e Rodar
+
+```bash
+git clone https://github.com/deivisan/DeiviTech-VoiceHub.git
+cd DeiviTech-VoiceHub
+bun run dev
+```
+
+Abra [http://localhost:3030](http://localhost:3030) no Chrome/Edge.
+
+---
+
+## 🎯 Como Usar
+
+1. **Clique em "GRAVAR"** (ou pressione `Ctrl+Enter`)
+2. **Fale naturalmente** - o texto aparece em tempo real
+3. **Clique em "Parar"** quando terminar
+4. **Copiar** (`Ctrl+Shift+C`) ou **Limpar** (`Ctrl+Shift+X`)
+
+### Atalhos de Teclado
+
+| Atalho | Ação |
+|--------|------|
+| `Ctrl/Cmd + Enter` | Iniciar/Parar gravação |
+| `Ctrl/Cmd + Shift + C` | Copiar texto |
+| `Ctrl/Cmd + Shift + X` | Limpar editor |
+
+---
+
+## 🌍 Idiomas Suportados
+
+- 🇧🇷 Português (Brasil)
+- 🇺🇸 English (US)
+- 🇪🇸 Español
+- 🇫🇷 Français
+- 🇩🇪 Deutsch
+- 🇮🇹 Italiano
+- 🇯🇵 日本語
+- 🇨🇳 中文 (简体)
+
+---
+
+## 📂 Estrutura do Projeto
+
+```
+DeiviTech-VoiceHub/
+├── src/
+│   ├── public/
+│   │   ├── index.html    # Interface web
+│   │   └── app.js        # Lógica Web Speech API
+│   ├── server.ts         # Servidor Bun HTTP
+│   └── desktop/          # (Futuro) Tauri desktop app
+├── scripts/              # Scripts de instalação
+├── docs/                 # Documentação
+├── package.json
+└── README.md
+```
+
+---
+
+## 🛠️ Scripts Disponíveis
+
+```bash
+bun run dev      # Iniciar servidor de desenvolvimento
+bun run start    # Iniciar servidor de produção
+```
+
+---
+
+## 🐛 Bug Fixes desta Versão
+
+### ✅ Corrigido: Texto Repetindo Infinitamente
+
+**Problema**: Web Speech API estava re-processando todos os resultados a cada evento `onresult`, causando repetição infinita.
+
+**Solução**: Implementado `lastProcessedIndex` para rastrear resultados já processados.
+
+```javascript
+// ANTES (bugado)
+recognition.onresult = (event) => {
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+        // Re-processa TUDO toda vez!
+    }
+};
+
+// DEPOIS (corrigido)
+this.lastProcessedIndex = 0;
+recognition.onresult = (event) => {
+    for (let i = this.lastProcessedIndex; i < event.results.length; i++) {
+        if (event.results[i].isFinal) {
+            this.lastProcessedIndex = i + 1; // Rastreia progresso
+        }
+    }
+};
+```
+
+### ✅ Removido: Diálogos de Confirmação
+
+- **Antes**: `confirm()` ao clicar em "Limpar" ou "Parar"
+- **Depois**: Execução imediata (UX mais rápida)
+
+### ✅ Corrigido: Settings Gear Não Funcionava
+
+- Agora a engrenagem ⚙️ **realmente** abre/fecha o painel de configurações
+
+---
+
+## 🔮 Roadmap Futuro
+
+### Fase 1: Refatoração Web ✅ (Completo)
+- [x] Remover Groq/Hybrid (só Web Speech)
+- [x] Fixar bug de repetição de texto
+- [x] Remover confirmações
+- [x] Interface mobile-responsive
+- [x] Settings funcionando
+
+### Fase 2: Linux Desktop App (Em Breve)
+- [ ] Ícone na system tray (COSMIC DE/Wayland)
+- [ ] Hotkey global (Super+H configurável)
+- [ ] Injeção de texto em janelas ativas (`ydotool`)
+- [ ] Empacotamento Tauri (binário nativo)
+
+### Fase 3: Features Avançadas
+- [ ] Multi-sessões com tabs
+- [ ] Integração com AI agents (GPT-4o/Claude para refinamento)
+- [ ] Export para arquivos (.txt, .md, .docx)
+- [ ] Histórico de transcrições
+- [ ] Comandos de voz (ex: "novo parágrafo", "apagar última frase")
+
+---
+
+## 🤝 Contribuindo
+
+Pull requests são bem-vindos! Para mudanças grandes, abra uma issue primeiro.
+
+### Desenvolvimento Local
+
+1. Fork o repositório
+2. Crie uma branch: `git checkout -b feature/nova-feature`
+3. Commit: `git commit -m 'Add: nova feature incrível'`
+4. Push: `git push origin feature/nova-feature`
+5. Abra um Pull Request
+
+---
+
+## 📜 Licença
+
+MIT License - veja [LICENSE](LICENSE) para detalhes.
+
+---
+
+## 👨‍💻 Autor
+
+**Deivison Santana** ([@deivisan](https://github.com/deivisan))
+
+- 🌐 Arch Linux + COSMIC DE
+- 🦞 DevSan AGI - Space Lobster Edition
+- ⚡ Bun-first, CLI-first, autonomia total
+
+---
+
+## 🙏 Agradecimentos
+
+- **Web Speech API** (Google) - Motor de transcrição gratuito
+- **Bun** - Runtime JavaScript mais rápido do mundo
+- **COSMIC DE** - Desktop environment moderno para Linux
+
+---
+
+<div align="center">
+
+**🦞 Feito com ❤️ em Arch Linux**
+
+[⭐ Star no GitHub](https://github.com/deivisan/DeiviTech-VoiceHub) • [🐛 Reportar Bug](https://github.com/deivisan/DeiviTech-VoiceHub/issues) • [💡 Sugerir Feature](https://github.com/deivisan/DeiviTech-VoiceHub/issues)
+
+</div>

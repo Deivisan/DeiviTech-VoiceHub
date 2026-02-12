@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎤 DeiviTech VoiceHub - Ditado Inteligente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #1a1a2e;
+            --accent-blue: #4a90e2;
+            --accent-purple: #9b59b6;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --success: #2ecc71;
+            --error: #e74c3c;
+            --warning: #f39c12;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a1a2e 100%);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER COMPACTO */
+        header {
+            padding: 1rem 2rem;
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(74, 144, 226, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background: rgba(46, 204, 113, 0.2);
+            border: 1px solid var(--success);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .settings-btn {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .settings-btn:hover {
+            border-color: var(--accent-blue);
+            background: rgba(74, 144, 226, 0.1);
+            transform: rotate(90deg);
+        }
+
+        /* MAIN CONTENT */
+        main {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* EDITOR DE TRANSCRIÇÃO */
+        .editor-container {
+            flex: 1;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid rgba(74, 144, 226, 0.3);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            min-height: 300px;
+            max-height: 60vh;
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .editor-title {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .word-count {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        #editor {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(74, 144, 226, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+            overflow-y: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+
+        #editor:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+        }
+
+        /* CONTROLS */
+        .controls-panel {
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid rgba(74, 144, 226, 0.3);
+            padding: 1.5rem;
+        }
+
+        .method-info {
+            text-align: center;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            background: rgba(74, 144, 226, 0.1);
+            border: 1px solid rgba(74, 144, 226, 0.3);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--accent-blue);
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-record {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .btn-record:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .btn-record.recording {
+            animation: recordPulse 1.5s infinite;
+        }
+
+        @keyframes recordPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+        }
+
+        .btn-stop {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-stop:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .btn-copy {
+            background: linear-gradient(135deg, var(--accent-blue), #3498db);
+            color: white;
+        }
+
+        .btn-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.4);
+        }
+
+        .btn-clear {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-clear:hover {
+            background: rgba(231, 76, 60, 0.2);
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        /* VISUALIZER */
+        .visualizer-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #visualizer {
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        /* SETTINGS PANEL (HIDDEN BY DEFAULT) */
+        .settings-panel {
+            display: none;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid rgba(74, 144, 226, 0.3);
+            padding: 1.5rem;
+            margin-top: 1rem;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .settings-panel.visible {
+            display: block;
+        }
+
+        .setting-group {
+            margin-bottom: 1rem;
+        }
+
+        .setting-label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .setting-input {
+            width: 100%;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(74, 144, 226, 0.5);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            color: var(--text-primary);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            transform: translateY(150%);
+            transition: transform 0.3s;
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        .toast.error {
+            border-color: var(--error);
+        }
+
+        .toast.warning {
+            border-color: var(--warning);
+        }
+
+        /* STATS BAR */
+        .stats-bar {
+            display: flex;
+            gap: 2rem;
+            padding: 0.75rem 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-value {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        /* MOBILE RESPONSIVO */
+        @media (max-width: 768px) {
+            header {
+                padding: 0.75rem 1rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            main {
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .editor-container {
+                max-height: 50vh;
+            }
+        }
+
+        /* LANDSCAPE MOBILE */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .editor-container {
+                max-height: 40vh;
+            }
+
+            .visualizer-container {
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">🎤 DeiviTech VoiceHub</div>
+        <div class="header-controls">
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                <span id="statusText">Pronto</span>
+            </div>
+            <button class="settings-btn" id="settingsToggle" title="Configurações">⚙️</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- EDITOR -->
+        <div class="editor-container">
+            <div class="editor-header">
+                <div class="editor-title">📝 Transcrição ao Vivo</div>
+                <div class="word-count"><span id="wordCount">0</span> palavras</div>
+            </div>
+            <textarea 
+                id="editor" 
+                placeholder="Clique em GRAVAR e comece a falar... O texto aparecerá aqui em tempo real."
+                spellcheck="true"
+            ></textarea>
+        </div>
+
+        <!-- VISUALIZER -->
+        <div class="visualizer-container">
+            <canvas id="visualizer" width="800" height="80"></canvas>
+        </div>
+
+        <!-- CONTROLS -->
+        <div class="controls-panel">
+            <div class="method-info">
+                🌐 <strong>Web Speech API</strong> - Transcrição instantânea no navegador (Chrome/Edge)
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span>⏱️ Duração:</span>
+                    <span class="stat-value" id="duration">00:00</span>
+                </div>
+                <div class="stat-item">
+                    <span>🌍 Idioma:</span>
+                    <span class="stat-value" id="langDisplay">Português (Brasil)</span>
+                </div>
+                <div class="stat-item">
+                    <span>⚡ Status:</span>
+                    <span class="stat-value" id="apiStatus">Online</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="recordBtn" class="btn btn-record">
+                    <span>⏺️</span>
+                    <span>GRAVAR</span>
+                </button>
+                <button id="stopBtn" class="btn btn-stop" disabled>
+                    <span>⏹️</span>
+                    <span>Parar</span>
+                </button>
+                <button id="copyBtn" class="btn btn-copy">
+                    <span>📋</span>
+                    <span>Copiar</span>
+                </button>
+                <button id="clearBtn" class="btn btn-clear">
+                    <span>🗑️</span>
+                    <span>Limpar</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- SETTINGS (HIDDEN) -->
+        <div class="settings-panel" id="settingsPanel">
+            <h3 style="margin-bottom: 1rem; color: var(--accent-blue);">⚙️ Configurações</h3>
+            
+            <div class="setting-group">
+                <label class="setting-label">Idioma de Transcrição</label>
+                <select id="language" class="setting-input">
+                    <option value="pt-BR" selected>Português (Brasil)</option>
+                    <option value="en-US">English (US)</option>
+                    <option value="es-ES">Español (España)</option>
+                    <option value="fr-FR">Français</option>
+                    <option value="de-DE">Deutsch</option>
+                    <option value="it-IT">Italiano</option>
+                    <option value="ja-JP">日本語</option>
+                    <option value="zh-CN">中文 (简体)</option>
+                </select>
+            </div>
+
+            <div class="setting-group">
+                <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+                    <strong>Atalhos de Teclado:</strong><br>
+                    • <kbd>Ctrl/Cmd + Enter</kbd> - Iniciar/Parar gravação<br>
+                    • <kbd>Ctrl/Cmd + Shift + C</kbd> - Copiar texto<br>
+                    • <kbd>Ctrl/Cmd + Shift + X</kbd> - Limpar editor
+                </p>
+            </div>
+
+            <div class="setting-group">
+                <p style="font-size: 0.85rem; color: var(--success); line-height: 1.5;">
+                    ✅ Pontuação automática ativada<br>
+                    ✅ Auto-save da sessão ativado<br>
+                    ✅ Transcrição em tempo real
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
