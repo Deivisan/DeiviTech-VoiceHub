@@ -1,6 +1,6 @@
 [package]
 name = "deivitech-voicehub"
-version = "0.1.0"
+version = "0.0.1-pre-alpha"
 description = "Real-time voice dictation system with Web Speech API"
 authors = ["Deivison Santana <deivisan>"]
 license = "MIT"

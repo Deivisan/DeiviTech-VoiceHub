@@ -1,12 +1,12 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "DeiviTech VoiceHub",
-  "version": "0.1.0",
+  "version": "0.0.1-pre-alpha",
   "identifier": "com.deivisan.voicehub",
   "build": {
     "frontendDist": "../src/public",
     "beforeDevCommand": "bun run dev",
-    "devUrl": "http://localhost:3030"
+    "devUrl": "http://localhost:5001"
   },
   "app": {
     "windows": [

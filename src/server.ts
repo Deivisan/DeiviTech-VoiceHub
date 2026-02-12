@@ -11,7 +11,7 @@
  * - Zero dependências externas
  */
 
-const PORT = 3030;
+const PORT = 5001;
 const PUBLIC_DIR = import.meta.dir + '/public';
 
 console.log(`
