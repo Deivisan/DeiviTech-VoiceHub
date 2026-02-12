@@ -1,7 +1,8 @@
 use tauri::{
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
-    Manager, Runtime,
+    Emitter, Manager, Runtime,
 };
+use tauri_plugin_global_shortcut::GlobalShortcutExt;
 
 /// Inject text into currently active window using ydotool
 #[tauri::command]
@@ -44,6 +45,16 @@ async fn check_ydotool() -> Result<String, String> {
     }
 }
 
+/// Toggle recording via global hotkey - emits event to frontend
+#[tauri::command]
+async fn toggle_recording(app: tauri::AppHandle) -> Result<String, String> {
+    // Emit event to frontend to toggle recording state
+    app.emit("toggle-recording", ())
+        .map_err(|e| format!("Failed to emit toggle event: {}", e))?;
+    
+    Ok("Toggle recording event sent".to_string())
+}
+
 /// Setup system tray with icon and menu
 fn setup_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
     let _tray = TrayIconBuilder::with_id("main-tray")
@@ -76,6 +87,7 @@ fn setup_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .setup(|app| {
             if cfg!(debug_assertions) {
                 app.handle().plugin(
@@ -88,9 +100,26 @@ pub fn run() {
             // Setup system tray
             setup_tray(&app.handle())?;
 
+            // Register global hotkey: Super+H
+            use tauri_plugin_global_shortcut::ShortcutState;
+            
+            app.handle()
+                .plugin(
+                    tauri_plugin_global_shortcut::Builder::new()
+                        .with_handler(|app, _shortcut, event| {
+                            if event.state == ShortcutState::Pressed {
+                                // Emit event to frontend to toggle recording
+                                let _ = app.emit("toggle-recording", ());
+                            }
+                        })
+                        .build(),
+                )?;
+
+            app.global_shortcut().register("Super+H")?;
+
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![inject_text, check_ydotool])
+        .invoke_handler(tauri::generate_handler![inject_text, check_ydotool, toggle_recording])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

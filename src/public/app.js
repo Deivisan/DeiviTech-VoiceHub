@@ -23,6 +23,25 @@ class VoiceHub {
         this.updateStats();
         this.checkBrowserSupport();
         this.loadSession();
+        this.setupTauriListeners();
+    }
+
+    setupTauriListeners() {
+        // Check if running in Tauri (desktop app)
+        if (window.__TAURI__) {
+            const { listen } = window.__TAURI__.event;
+            
+            // Listen for global hotkey toggle event from Rust backend
+            listen('toggle-recording', () => {
+                if (this.isRecording) {
+                    this.stopRecording();
+                } else {
+                    this.startRecording();
+                }
+            });
+
+            console.log('✅ Tauri global hotkey listener registered (Super+H)');
+        }
     }
 
     setupEventListeners() {

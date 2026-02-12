@@ -26,7 +26,9 @@ Sistema profissional de ditado de voz em tempo real para Linux, usando **Web Spe
 - ✅ **System Tray** com ícone e menu (mostrar/ocultar)
 - ✅ **Comandos Tauri** para injeção de texto via `ydotool`
 - ✅ **Binário nativo** (~10MB vs 200MB+ do Electron)
-- ⏳ **Global Hotkeys** (Super+H para gravar - implementação futura)
+
+### Desktop App (Fase 3 - ✅ Completa)
+- ✅ **Global Hotkeys** - `Super+H` inicia/para gravação de qualquer lugar
 - ⏳ **Auto-start** com systemd (implementação futura)
 
 ---
@@ -97,9 +99,69 @@ Isso abrirá o app desktop nativo com system tray integrado.
 
 | Atalho | Ação |
 |--------|------|
-| `Ctrl/Cmd + Enter` | Iniciar/Parar gravação |
+| `Ctrl/Cmd + Enter` | Iniciar/Parar gravação (web app) |
+| `Super + H` | Iniciar/Parar gravação (desktop app - global) |
 | `Ctrl/Cmd + Shift + C` | Copiar texto |
 | `Ctrl/Cmd + Shift + X` | Limpar editor |
+
+---
+
+## ⌨️ Global Hotkeys (Desktop App)
+
+O app desktop suporta **atalhos globais** que funcionam mesmo quando a janela está minimizada ou em segundo plano.
+
+### Hotkey Padrão
+
+| Atalho | Ação | Escopo |
+|--------|------|--------|
+| **`Super + H`** | Iniciar/Parar gravação | Sistema inteiro (funciona em qualquer janela) |
+
+**Super** = Tecla Windows/Meta (⊞ no teclado)
+
+### Como Funciona
+
+1. Pressione `Super+H` de **qualquer janela ativa** do sistema
+2. O VoiceHub inicia a gravação em background
+3. O texto transcrito fica aguardando na janela do app
+4. Pressione `Super+H` novamente para parar
+
+### Arquitetura Técnica
+
+```rust
+// Backend Rust (src-tauri/src/lib.rs)
+use tauri_plugin_global_shortcut::GlobalShortcutExt;
+
+app.global_shortcut().register("Super+H")?;
+app.handle().plugin(
+    tauri_plugin_global_shortcut::Builder::new()
+        .with_handler(|app, _shortcut, event| {
+            if event.state == ShortcutState::Pressed {
+                // Emit event para frontend
+                let _ = app.emit("toggle-recording", ());
+            }
+        })
+        .build(),
+)?;
+```
+
+```javascript
+// Frontend (src/public/app.js)
+if (window.__TAURI__) {
+    const { listen } = window.__TAURI__.event;
+    
+    listen('toggle-recording', () => {
+        if (this.isRecording) {
+            this.stopRecording();
+        } else {
+            this.startRecording();
+        }
+    });
+}
+```
+
+### Customizar Hotkey (Futuro)
+
+Em versões futuras, você poderá configurar hotkeys customizados via settings (ex: `Ctrl+Alt+V`, `Super+Shift+R`, etc.).
 
 ---
 
@@ -213,11 +275,17 @@ recognition.onresult = (event) => {
 - [x] Comandos Tauri para `ydotool` (injeção de texto)
 - [x] Configuração completa (Cargo.toml + tauri.conf.json)
 - [x] Compilação funcionando
-- [ ] Hotkey global (Super+H configurável) - **Próximo passo**
+
+### Fase 3: Global Hotkeys ✅ (Completo - 12/02/2026)
+- [x] **Global hotkey Super+H** - inicia/para gravação de qualquer lugar
+- [x] Listener Tauri no backend
+- [x] Event emitter para frontend
+- [x] Documentação atualizada
+- [ ] Hotkey configurável via settings (futuro)
 - [ ] Build de produção + instaladores (.deb, .rpm, .AppImage)
 - [ ] Auto-start com systemd
 
-### Fase 3: Features Avançadas (Futuro)
+### Fase 4: Features Avançadas (Futuro)
 - [ ] Multi-sessões com tabs
 - [ ] Integração com AI agents (GPT-4o/Claude para refinamento)
 - [ ] Export para arquivos (.txt, .md, .docx)
