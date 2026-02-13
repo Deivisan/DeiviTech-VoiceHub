@@ -1,0 +1,12 @@
+voicehub = VoiceHub
+transcription = Transcrição
+recording = Gravando
+stop = Parar
+copy = Copiar
+clear = Limpar
+inject = Injetar
+words = palavras
+language = Idioma
+settings = Configurações
+start-recording = Clique para começar a gravar
+stop-recording = Clique para parar a gravação

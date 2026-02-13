@@ -1,0 +1,1 @@
+/home/deivi/Projetos/DeiviTech-VoiceHub/target/release/cosmic-applet-voicehub: /home/deivi/Projetos/DeiviTech-VoiceHub/src/app.rs /home/deivi/Projetos/DeiviTech-VoiceHub/src/config.rs /home/deivi/Projetos/DeiviTech-VoiceHub/src/main.rs /home/deivi/Projetos/DeiviTech-VoiceHub/src/text_inject.rs

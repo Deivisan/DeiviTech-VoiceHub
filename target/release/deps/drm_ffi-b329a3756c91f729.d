@@ -1,0 +1,12 @@
+/home/deivi/Projetos/DeiviTech-VoiceHub/target/release/deps/drm_ffi-b329a3756c91f729.d: /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/lib.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/utils.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/gem.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/ioctl.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/mode.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/syncobj.rs
+
+/home/deivi/Projetos/DeiviTech-VoiceHub/target/release/deps/libdrm_ffi-b329a3756c91f729.rlib: /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/lib.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/utils.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/gem.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/ioctl.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/mode.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/syncobj.rs
+
+/home/deivi/Projetos/DeiviTech-VoiceHub/target/release/deps/libdrm_ffi-b329a3756c91f729.rmeta: /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/lib.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/utils.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/gem.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/ioctl.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/mode.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/syncobj.rs
+
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/lib.rs:
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/utils.rs:
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/gem.rs:
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/ioctl.rs:
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/mode.rs:
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/drm-ffi-0.7.1/src/syncobj.rs:

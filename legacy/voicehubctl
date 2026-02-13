@@ -1,0 +1,225 @@
+#!/bin/bash
+# 🎤 DeiviTech VoiceHub - Launcher Robusto
+# Sempre verifica se já está rodando antes de iniciar
+
+set -euo pipefail
+
+# Cores
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Configurações
+BINARY_NAME="deivitech-voicehub"
+BINARY_PATH="$HOME/Projetos/DeiviTech-VoiceHub/src-tauri/target/release/deivitech-voicehub"
+PIDFILE="/tmp/voicehub.pid"
+LOG_FILE="$HOME/.local/share/voicehub/voicehub.log"
+
+# Criar diretório de logs se não existir
+mkdir -p "$HOME/.local/share/voicehub"
+
+# Função para verificar se processo está rodando
+is_running() {
+    if [ -f "$PIDFILE" ]; then
+        local pid=$(cat "$PIDFILE" 2>/dev/null)
+        if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+            return 0  # Está rodando
+        fi
+    fi
+    
+    # Verificar pelo nome do processo também
+    if pgrep -x "$BINARY_NAME" > /dev/null 2>&1; then
+        return 0
+    fi
+    
+    return 1  # Não está rodando
+}
+
+# Função para obter PID
+get_pid() {
+    if [ -f "$PIDFILE" ]; then
+        cat "$PIDFILE" 2>/dev/null
+    else
+        pgrep -x "$BINARY_NAME" 2>/dev/null
+    fi
+}
+
+# Função para parar o VoiceHub
+stop_voicehub() {
+    echo -e "${YELLOW}⏹️  Parando VoiceHub...${NC}"
+    
+    local pid=$(get_pid)
+    if [ -n "$pid" ]; then
+        kill -TERM "$pid" 2>/dev/null || true
+        sleep 2
+        
+        # Forçar kill se ainda estiver rodando
+        if kill -0 "$pid" 2>/dev/null; then
+            kill -KILL "$pid" 2>/dev/null || true
+        fi
+    fi
+    
+    # Matar qualquer processo residual
+    pkill -9 -x "$BINARY_NAME" 2>/dev/null || true
+    
+    rm -f "$PIDFILE"
+    echo -e "${GREEN}✅ VoiceHub parado!${NC}"
+}
+
+# Função para verificar/iniciar ydotoold
+check_ydotoold() {
+    if ! command -v ydotool &> /dev/null; then
+        echo -e "${RED}❌ ydotool não encontrado!${NC}"
+        echo "   Instale com: sudo pacman -S ydotool"
+        return 1
+    fi
+    
+    if ! pgrep -x "ydotoold" > /dev/null 2>&1; then
+        echo -e "${BLUE}🚀 Iniciando ydotoold...${NC}"
+        sudo ydotoold > /dev/null 2>&1 &
+        sleep 2
+        
+        if pgrep -x "ydotoold" > /dev/null 2>&1; then
+            echo -e "${GREEN}✅ ydotoold rodando!${NC}"
+        else
+            echo -e "${YELLOW}⚠️  Não foi possível iniciar ydotoold${NC}"
+            echo "   Tente manualmente: sudo ydotoold"
+        fi
+    else
+        echo -e "${GREEN}✅ ydotoold já está rodando${NC}"
+    fi
+}
+
+# Função para iniciar VoiceHub
+start_voicehub() {
+    # Verificar se binário existe
+    if [ ! -f "$BINARY_PATH" ]; then
+        echo -e "${RED}❌ Binário não encontrado: $BINARY_PATH${NC}"
+        echo "   Execute o build: cd ~/Projetos/DeiviTech-VoiceHub/src-tauri && cargo build --release"
+        return 1
+    fi
+    
+    # Verificar se já está rodando
+    if is_running; then
+        local pid=$(get_pid)
+        echo -e "${YELLOW}⚠️  VoiceHub já está rodando! (PID: $pid)${NC}"
+        echo "   Use: $0 restart  - para reiniciar"
+        echo "   Use: $0 stop     - para parar"
+        return 0
+    fi
+    
+    # Verificar ydotoold
+    check_ydotoold
+    
+    echo -e "${BLUE}🎤 Iniciando DeiviTech VoiceHub...${NC}"
+    echo "   Binário: $BINARY_PATH"
+    echo "   Logs: $LOG_FILE"
+    echo ""
+    
+    # Iniciar em background com logs
+    nohup "$BINARY_PATH" > "$LOG_FILE" 2>&1 &
+    local new_pid=$!
+    
+    # Salvar PID
+    echo $new_pid > "$PIDFILE"
+    
+    # Aguardar inicialização
+    sleep 3
+    
+    # Verificar se iniciou corretamente
+    if kill -0 $new_pid 2>/dev/null; then
+        echo -e "${GREEN}✅ VoiceHub iniciado com sucesso! (PID: $new_pid)${NC}"
+        echo ""
+        echo -e "${BLUE}📝 Comandos disponíveis:${NC}"
+        echo "   • Super + H     - Iniciar/Parar gravação (global)"
+        echo "   • Ctrl + Enter  - Iniciar/Parar gravação (na janela)"
+        echo "   • Ctrl+Shift+C  - Copiar texto"
+        echo "   • Ctrl+Shift+X  - Limpar editor"
+        echo ""
+        echo -e "${BLUE}🖱️  Clique no ícone na barra do COSMIC para mostrar/ocultar${NC}"
+        return 0
+    else
+        echo -e "${RED}❌ Falha ao iniciar VoiceHub${NC}"
+        echo "   Verifique os logs: $LOG_FILE"
+        rm -f "$PIDFILE"
+        return 1
+    fi
+}
+
+# Função para mostrar status
+show_status() {
+    if is_running; then
+        local pid=$(get_pid)
+        echo -e "${GREEN}🎤 VoiceHub está rodando (PID: $pid)${NC}"
+        
+        if pgrep -x "ydotoold" > /dev/null 2>&1; then
+            echo -e "${GREEN}   ✅ ydotoold ativo${NC}"
+        else
+            echo -e "${YELLOW}   ⚠️  ydotoold não está rodando${NC}"
+        fi
+        
+        echo ""
+        echo "   Últimas linhas do log:"
+        tail -n 5 "$LOG_FILE" 2>/dev/null || echo "   (sem logs ainda)"
+    else
+        echo -e "${RED}🎤 VoiceHub não está rodando${NC}"
+    fi
+}
+
+# Função para mostrar logs
+show_logs() {
+    if [ -f "$LOG_FILE" ]; then
+        echo -e "${BLUE}📄 Logs do VoiceHub:${NC}"
+        tail -f "$LOG_FILE"
+    else
+        echo -e "${YELLOW}Nenhum log encontrado${NC}"
+    fi
+}
+
+# Menu de ajuda
+show_help() {
+    echo -e "${BLUE}🎤 DeiviTech VoiceHub - Launcher${NC}"
+    echo ""
+    echo "Uso: $0 [comando]"
+    echo ""
+    echo "Comandos:"
+    echo "   start    - Inicia o VoiceHub (se não estiver rodando)"
+    echo "   stop     - Para o VoiceHub"
+    echo "   restart  - Reinicia o VoiceHub"
+    echo "   status   - Mostra status e logs recentes"
+    echo "   logs     - Mostra logs em tempo real"
+    echo "   help     - Mostra esta ajuda"
+    echo ""
+    echo "Sem argumentos: equivalente a 'start'"
+}
+
+# Main
+case "${1:-start}" in
+    start)
+        start_voicehub
+        ;;
+    stop)
+        stop_voicehub
+        ;;
+    restart)
+        stop_voicehub
+        sleep 1
+        start_voicehub
+        ;;
+    status)
+        show_status
+        ;;
+    logs)
+        show_logs
+        ;;
+    help|--help|-h)
+        show_help
+        ;;
+    *)
+        echo -e "${RED}Comando desconhecido: $1${NC}"
+        show_help
+        exit 1
+        ;;
+esac
