@@ -65,7 +65,7 @@ impl cosmic::Application for VoiceHubApplet {
             config,
             popup: None,
             is_recording: false,
-            transcript: String::new(),
+            transcript: "Clique em 'Iniciar Gravação' para começar...".to_string(),
             recording_duration: Duration::ZERO,
             word_count: 0,
         };
@@ -78,17 +78,22 @@ impl cosmic::Application for VoiceHubApplet {
     }
 
     fn view(&self) -> Element<'_, Self::Message> {
+        // Ícone muda baseado no estado
         let icon_name = if self.is_recording {
-            "media-playback-stop-symbolic"
+            // Vermelho quando gravando (estado ativo)
+            "microphone-sensitivity-high-symbolic"
         } else {
+            // Cinza quando parado
             "audio-input-microphone-symbolic"
         };
         
-        self.core
+        // Criar botão com ícone - clique abre/fecha popup
+        let button = self.core
             .applet
             .icon_button(icon_name)
-            .on_press(Message::ToggleRecording)
-            .into()
+            .on_press(Message::TogglePopup);
+        
+        button.into()
     }
 
     fn view_window(&self, _id: Id) -> Element<'_, Self::Message> {
@@ -135,17 +140,31 @@ impl cosmic::Application for VoiceHubApplet {
                     .on_press(Message::InjectText)
             );
 
-        // Botão principal de gravação
+        // Botão principal de gravação com cor baseada no estado
+        let (button_text, button_icon) = if self.is_recording {
+            ("Parar Gravação", "⏹️")
+        } else {
+            ("Iniciar Gravação", "🎤")
+        };
+        
         let record_button = widget::button::standard(
-            if self.is_recording { "⏹️ Parar" } else { "🎤 Gravar" }
+            format!("{} {}", button_icon, button_text)
         )
         .on_press(Message::ToggleRecording)
         .width(cosmic::iced::Length::Fill);
+        
+        // Indicador de status visual
+        let status_indicator = if self.is_recording {
+            widget::text("🔴 GRAVANDO").size(14)
+        } else {
+            widget::text("⚪ Pronto").size(14)
+        };
 
         // Conteúdo
         let content = widget::column()
             .push(header)
             .push(widget::divider::horizontal::default())
+            .push(status_indicator)
             .push(transcript_area)
             .push(stats)
             .push(action_buttons)
