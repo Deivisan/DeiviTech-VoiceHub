@@ -15,6 +15,7 @@ pub async fn inject_text(text: String) -> Result<(), String> {
     
     // Injetar texto
     let output = Command::new("ydotool")
+        .env("YDOTOOL_SOCKET", "/tmp/.ydotool_socket")
         .arg("type")
         .arg("--")
         .arg(&text)
