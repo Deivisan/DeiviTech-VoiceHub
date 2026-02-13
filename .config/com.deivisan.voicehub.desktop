@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=VoiceHub
+Comment=Voice dictation applet for COSMIC
+Type=Application
+Terminal=false
+Categories=Audio;Utility;
+Keywords=voice;speech;dictation;transcription;
+Icon=com.deivisan.voicehub
+StartupNotify=true
+NoDisplay=true
+X-CosmicApplet=true
+X-CosmicHoverPopup=true

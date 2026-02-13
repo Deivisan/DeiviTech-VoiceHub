@@ -1,0 +1,10 @@
+/home/deivi/Projetos/DeiviTech-VoiceHub/target/debug/deps/wayland_server-4c20bb171866bc49.d: /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-server-0.31.11/src/lib.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-server-0.31.11/src/client.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-server-0.31.11/src/dispatch.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-server-0.31.11/src/display.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-server-0.31.11/src/global.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-server-0.31.11/src/socket.rs
+
+/home/deivi/Projetos/DeiviTech-VoiceHub/target/debug/deps/libwayland_server-4c20bb171866bc49.rmeta: /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-server-0.31.11/src/lib.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-server-0.31.11/src/client.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-server-0.31.11/src/dispatch.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-server-0.31.11/src/display.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-server-0.31.11/src/global.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-server-0.31.11/src/socket.rs
+
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-server-0.31.11/src/lib.rs:
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-server-0.31.11/src/client.rs:
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-server-0.31.11/src/dispatch.rs:
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-server-0.31.11/src/display.rs:
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-server-0.31.11/src/global.rs:
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wayland-server-0.31.11/src/socket.rs:

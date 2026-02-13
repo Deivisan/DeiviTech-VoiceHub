@@ -1,0 +1,11 @@
+/home/deivi/Projetos/DeiviTech-VoiceHub/target/debug/deps/zvariant_derive-3fe87e87b455f6a2.d: /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/lib.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/dict.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/signature.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/type.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/utils.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/value.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/../README.md
+
+/home/deivi/Projetos/DeiviTech-VoiceHub/target/debug/deps/libzvariant_derive-3fe87e87b455f6a2.so: /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/lib.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/dict.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/signature.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/type.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/utils.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/value.rs /home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/../README.md
+
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/lib.rs:
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/dict.rs:
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/signature.rs:
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/type.rs:
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/utils.rs:
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/value.rs:
+/home/deivi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zvariant_derive-5.9.2/src/../README.md:

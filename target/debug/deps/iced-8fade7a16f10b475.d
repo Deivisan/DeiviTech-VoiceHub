@@ -1,0 +1,14 @@
+/home/deivi/Projetos/DeiviTech-VoiceHub/target/debug/deps/iced-8fade7a16f10b475.d: /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/lib.rs /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/error.rs /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/program.rs /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/application.rs /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/daemon.rs /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/settings.rs /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/time.rs /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/window.rs /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/window/icon.rs /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/advanced.rs
+
+/home/deivi/Projetos/DeiviTech-VoiceHub/target/debug/deps/libiced-8fade7a16f10b475.rmeta: /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/lib.rs /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/error.rs /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/program.rs /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/application.rs /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/daemon.rs /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/settings.rs /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/time.rs /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/window.rs /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/window/icon.rs /home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/advanced.rs
+
+/home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/lib.rs:
+/home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/error.rs:
+/home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/program.rs:
+/home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/application.rs:
+/home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/daemon.rs:
+/home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/settings.rs:
+/home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/time.rs:
+/home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/window.rs:
+/home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/window/icon.rs:
+/home/deivi/.cargo/git/checkouts/libcosmic-41009aea1d72760b/ae830ca/iced/src/advanced.rs:

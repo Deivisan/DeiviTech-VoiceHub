@@ -1,0 +1,14 @@
+/home/deivi/Projetos/DeiviTech-VoiceHub/target/release/deps/softbuffer-50991bc24936b70f.d: /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/lib.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/kms.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/wayland/mod.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/wayland/buffer.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/x11.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/error.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/util.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/../README.md
+
+/home/deivi/Projetos/DeiviTech-VoiceHub/target/release/deps/libsoftbuffer-50991bc24936b70f.rlib: /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/lib.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/kms.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/wayland/mod.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/wayland/buffer.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/x11.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/error.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/util.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/../README.md
+
+/home/deivi/Projetos/DeiviTech-VoiceHub/target/release/deps/libsoftbuffer-50991bc24936b70f.rmeta: /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/lib.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/kms.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/wayland/mod.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/wayland/buffer.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/x11.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/error.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/util.rs /home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/../README.md
+
+/home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/lib.rs:
+/home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/kms.rs:
+/home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/wayland/mod.rs:
+/home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/wayland/buffer.rs:
+/home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/x11.rs:
+/home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/error.rs:
+/home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/util.rs:
+/home/deivi/.cargo/git/checkouts/softbuffer-bc2d12ab26478565/a3f77e2/src/../README.md:
