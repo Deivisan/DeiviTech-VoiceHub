@@ -3,9 +3,13 @@ use cosmic::iced::{Limits, Subscription};
 use cosmic::iced_winit::commands::popup::{destroy_popup, get_popup};
 use cosmic::prelude::*;
 use cosmic::widget;
+use std::sync::Arc;
 use std::time::Duration;
+use tokio::sync::Mutex;
+use tokio::sync::mpsc::UnboundedReceiver;
 
 use crate::config::VoiceHubConfig;
+use crate::speech_recognition::SpeechRecognition;
 use crate::text_inject;
 
 pub fn run() -> cosmic::iced::Result {
@@ -22,6 +26,10 @@ pub struct VoiceHubApplet {
     transcript: String,
     recording_duration: Duration,
     word_count: usize,
+    
+    // Speech Recognition
+    speech_recognition: Option<SpeechRecognition>,
+    transcript_receiver: Option<Arc<Mutex<UnboundedReceiver<String>>>>,
 }
 
 #[derive(Debug, Clone)]
@@ -37,6 +45,9 @@ pub enum Message {
     
     RecordingTick,
     UpdateConfig(VoiceHubConfig),
+    
+    // Nova mensagem para transcrição
+    TranscriptUpdate(String),
 }
 
 impl cosmic::Application for VoiceHubApplet {
@@ -68,6 +79,8 @@ impl cosmic::Application for VoiceHubApplet {
             transcript: "Clique em 'Iniciar Gravação' para começar...".to_string(),
             recording_duration: Duration::ZERO,
             word_count: 0,
+            speech_recognition: None,
+            transcript_receiver: None,
         };
 
         (app, Task::none())
@@ -184,6 +197,30 @@ impl cosmic::Application for VoiceHubApplet {
                 cosmic::iced::time::every(Duration::from_secs(1))
                     .map(|_| Message::RecordingTick)
             );
+            
+            // Poll transcript receiver
+            if let Some(rx) = &self.transcript_receiver {
+                let rx = rx.clone();
+                subs.push(
+                    cosmic::iced::Subscription::run_with_id(
+                        "transcript_receiver",
+                        futures::stream::unfold(rx, |rx| async move {
+                            let mut rx_guard = rx.lock().await;
+                            match rx_guard.recv().await {
+                                Some(text) => {
+                                    drop(rx_guard);  // Liberar lock antes de retornar
+                                    Some((Message::TranscriptUpdate(text), rx))
+                                }
+                                None => {
+                                    drop(rx_guard);
+                                    tokio::time::sleep(Duration::from_millis(100)).await;
+                                    Some((Message::RecordingTick, rx))
+                                }
+                            }
+                        })
+                    )
+                );
+            }
         }
         
         // Watch config changes
@@ -200,11 +237,26 @@ impl cosmic::Application for VoiceHubApplet {
         match message {
             Message::ToggleRecording => {
                 if self.is_recording {
+                    // Parar gravação
                     self.is_recording = false;
                     self.recording_duration = Duration::ZERO;
+                    
+                    // Parar speech recognition (o drop() automático vai parar)
+                    self.speech_recognition = None;
+                    self.transcript_receiver = None;
                 } else {
+                    // Iniciar gravação
                     self.is_recording = true;
                     self.recording_duration = Duration::ZERO;
+                    self.transcript.clear();
+                    self.word_count = 0;
+                    
+                    // Criar e iniciar speech recognition com channel
+                    let (sr, rx) = SpeechRecognition::new();
+                    sr.start(&self.config.language);
+                    
+                    self.speech_recognition = Some(sr);
+                    self.transcript_receiver = Some(Arc::new(Mutex::new(rx)));
                 }
                 Task::none()
             }
@@ -274,6 +326,12 @@ impl cosmic::Application for VoiceHubApplet {
             
             Message::UpdateConfig(config) => {
                 self.config = config;
+                Task::none()
+            }
+            
+            Message::TranscriptUpdate(text) => {
+                self.transcript = text;
+                self.word_count = self.transcript.split_whitespace().count();
                 Task::none()
             }
         }

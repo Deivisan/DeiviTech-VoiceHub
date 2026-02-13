@@ -1,6 +1,6 @@
 [package]
 name = "cosmic-applet-voicehub"
-version = "0.1.0"
+version = "0.0.2"
 edition = "2021"
 license = "MIT"
 description = "Voice dictation applet for COSMIC Desktop"
@@ -13,6 +13,7 @@ libcosmic = { git = "https://github.com/pop-os/libcosmic.git", default-features 
 
 # Async runtime
 tokio = { version = "1.35", features = ["rt", "sync", "time", "process"] }
+futures = "0.3"
 
 # Serialization
 serde = { version = "1.0", features = ["derive"] }
@@ -20,6 +21,13 @@ serde_json = "1.0"
 
 # Clipboard
 arboard = "3.3"
+
+# WebKit for Web Speech API
+webkit2gtk = { version = "2.0", features = ["v2_40"] }
+webkit2gtk-sys = "2.0"
+gtk = "0.18"
+gio = "0.18"
+glib = "0.18"
 
 # Utils
 log = "0.4"
