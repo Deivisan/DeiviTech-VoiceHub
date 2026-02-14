@@ -1,0 +1,144 @@
+#!/bin/bash
+# 🎤 DeiviTech VoiceHub - Web Server Launcher
+# Servidor web para ditado de voz via navegador
+
+PROJECT_DIR="/home/deivi/Projetos/DeiviTech-VoiceHub"
+LEGACY_DIR="$PROJECT_DIR/legacy"
+SERVER_SCRIPT="$LEGACY_DIR/src/server.ts"
+LOG_FILE="$PROJECT_DIR/voicehub.log"
+PID_FILE="$PROJECT_DIR/voicehub.pid"
+PORT=5001
+
+# Cores
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+check_status() {
+    if [ -f "$PID_FILE" ]; then
+        pid=$(cat "$PID_FILE")
+        if ps -p "$pid" > /dev/null 2>&1; then
+            echo -e "${GREEN}🎤 VoiceHub ativo${NC}"
+            echo "   PID: $pid"
+            echo "   URL: http://localhost:$PORT"
+            return 0
+        fi
+    fi
+    
+    # Fallback: verifica HTTP
+    if curl -s -o /dev/null -w "%{http_code}" http://localhost:$PORT 2>/dev/null | grep -q "200"; then
+        echo -e "${GREEN}🎤 VoiceHub ativo (web)${NC}"
+        echo "   URL: http://localhost:$PORT"
+        return 0
+    fi
+    
+    return 1
+}
+
+start_server() {
+    echo -e "${BLUE}🎤 Iniciando VoiceHub...${NC}"
+    
+    if check_status; then
+        echo -e "${YELLOW}⚠️  VoiceHub já está ativo!${NC}"
+        echo "   Acesse: http://localhost:$PORT"
+        return 0
+    fi
+    
+    cd "$LEGACY_DIR"
+    nohup bun run "$SERVER_SCRIPT" > "$LOG_FILE" 2>&1 &
+    NEW_PID=$!
+    echo $NEW_PID > "$PID_FILE"
+    
+    sleep 2
+    
+    if ps -p "$NEW_PID" > /dev/null 2>&1; then
+        echo -e "${GREEN}✅ VoiceHub iniciado!${NC}"
+        echo "   PID: $NEW_PID"
+        echo "   URL: http://localhost:$PORT"
+        echo ""
+        echo -e "${CYAN}📌 Como usar:${NC}"
+        echo "   1. Abra o navegador em http://localhost:$PORT"
+        echo "   2. Use Chrome ou Edge (suporte completo Web Speech API)"
+        echo "   3. Clique em 'Iniciar Gravação' e fale"
+    else
+        echo -e "${RED}❌ Erro ao iniciar${NC}"
+        [ -f "$LOG_FILE" ] && tail -10 "$LOG_FILE"
+        rm -f "$PID_FILE"
+        return 1
+    fi
+}
+
+stop_server() {
+    echo -e "${YELLOW}🛑 Parando VoiceHub...${NC}"
+    
+    if [ -f "$PID_FILE" ]; then
+        pid=$(cat "$PID_FILE")
+        if ps -p "$pid" > /dev/null 2>&1; then
+            kill "$pid" 2>/dev/null
+        fi
+        rm -f "$PID_FILE"
+    fi
+    
+    # Fallback: kill por porta
+    lsof -ti :$PORT | xargs kill 2>/dev/null
+    
+    echo -e "${GREEN}✅ VoiceHub parado${NC}"
+}
+
+# ========== MAIN ==========
+case "${1:-status}" in
+    start|on|run)
+        start_server
+        ;;
+    stop|off|kill)
+        stop_server
+        ;;
+    restart|reload)
+        stop_server
+        sleep 1
+        start_server
+        ;;
+    status|stat)
+        if check_status; then
+            :
+        else
+            echo -e "${RED}❌ VoiceHub offline${NC}"
+            echo "   Execute: voicehub start"
+        fi
+        ;;
+    log)
+        [ -f "$LOG_FILE" ] && tail -f "$LOG_FILE" || echo "Log não encontrado"
+        ;;
+    toggle)
+        if check_status; then
+            stop_server
+        else
+            start_server
+        fi
+        ;;
+    applet)
+        # Iniciar applet COSMIC (outro projeto)
+        echo "Use: voicehub start (web) ou compile o applet manualmente"
+        ;;
+    -h|--help|help|"")
+        echo "🎤 VoiceHub Control - Servidor Web de Ditado de Voz"
+        echo ""
+        echo "  voicehub          Ver status (com auto-start)"
+        echo "  voicehub start   Iniciar servidor web"
+        echo "  voicehub stop    Parar servidor"
+        echo "  voicehub restart Reiniciar"
+        echo "  voicehub status  Ver status"
+        echo "  voicehub log     Ver logs"
+        echo ""
+        echo "📌 Servidor Bun: http://localhost:$PORT"
+        echo "📌 Navegador: Chrome ou Edge (Web Speech API)"
+        ;;
+    *)
+        echo -e "${RED}Comando inválido: $1${NC}"
+        echo "Use: voicehub --help"
+        exit 1
+        ;;
+esac
