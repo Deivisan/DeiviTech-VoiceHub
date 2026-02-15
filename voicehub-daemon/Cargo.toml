@@ -13,6 +13,12 @@ tray-icon = "0.18"
 # Async runtime
 tokio = { version = "1.35", features = ["full"] }
 
+# Web Speech API (headless WebView)
+webkit2gtk = { version = "2.0", features = ["v2_38"] }
+gtk = "0.18"
+gio = "0.18"
+glib = "0.18"
+
 # Utils
 log = "0.4"
 env_logger = "0.11"

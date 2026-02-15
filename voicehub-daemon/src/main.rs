@@ -1,5 +1,6 @@
 mod hotkey;
 mod inject;
+mod speech;
 
 use tokio::sync::mpsc;
 use std::sync::{Arc, Mutex};
@@ -26,22 +27,40 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let is_recording = Arc::new(Mutex::new(false));
     let current_transcript = Arc::new(Mutex::new(String::new()));
     
-    // Canal de comunicação
-    let (tx, mut rx) = mpsc::unbounded_channel();
+    // Canais de comunicação
+    let (hotkey_tx, mut rx) = mpsc::unbounded_channel();
+    let (transcript_tx, mut transcript_rx) = mpsc::unbounded_channel();
+    
+    // Inicializar Speech Recognizer
+    log::info!("🎤 Inicializando Web Speech API...");
+    let recognizer = speech::SpeechRecognizer::new(transcript_tx);
+    
+    // Aguardar recognizer ficar pronto (max 5s)
+    let start = std::time::Instant::now();
+    while !recognizer.is_ready() && start.elapsed().as_secs() < 5 {
+        tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
+    }
+    
+    if !recognizer.is_ready() {
+        log::error!("❌ Web Speech API não ficou pronto em 5 segundos");
+        return Err("Speech API timeout".into());
+    }
+    log::info!("✅ Web Speech API pronto");
     
     log::info!("🎯 Iniciando hotkey listener (Super+H)...");
     log::info!("   Pressione Ctrl+C para sair");
     log::info!("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
     
     // Hotkey Listener (Super+H)
-    let tx_clone = tx.clone();
+    let hotkey_tx_clone = hotkey_tx.clone();
     let _hotkey_handle = tokio::spawn(async move {
-        hotkey::listen("Super+H", tx_clone).await;
+        hotkey::listen("Super+H", hotkey_tx_clone).await;
     });
     
     // Event Loop Principal
     loop {
         tokio::select! {
+            // Eventos de hotkey (Super+H toggle)
             Some(event) = rx.recv() => {
                 match event {
                     HotkeyEvent::Toggle => {
@@ -52,41 +71,50 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                             log::info!("🎤 INICIANDO GRAVAÇÃO...");
                             log::info!("   Fale agora e pressione Super+H quando terminar");
                             
-                            // TODO: Iniciar Web Speech API
-                            // Por enquanto, simular com texto de teste
+                            // Limpar transcrição anterior
                             let mut transcript = current_transcript.lock().unwrap();
                             *transcript = String::new();
+                            drop(transcript); // Release lock
+                            
+                            // Iniciar Web Speech API
+                            recognizer.start();
                             
                         } else {
                             log::info!("⏹️  PARANDO GRAVAÇÃO...");
                             
+                            // Parar Web Speech API
+                            recognizer.stop();
+                            
+                            // Aguardar um pouco para última transcrição chegar
+                            tokio::time::sleep(tokio::time::Duration::from_millis(500)).await;
+                            
                             // Pegar transcrição acumulada
                             let transcript = current_transcript.lock().unwrap().clone();
                             
-                            if transcript.is_empty() {
-                                log::warn!("⚠️  Nenhuma transcrição para injetar");
-                                // Testar com texto de exemplo
-                                log::info!("   Injetando texto de teste...");
-                                if let Err(e) = inject::type_text("Teste VoiceHub funcionando! 🎤").await {
-                                    log::error!("❌ Falha ao injetar texto: {}", e);
-                                }
+                            if transcript.trim().is_empty() {
+                                log::warn!("⚠️  Nenhuma transcrição capturada");
                             } else {
                                 log::info!("   Injetando {} caracteres...", transcript.len());
                                 if let Err(e) = inject::type_text(&transcript).await {
                                     log::error!("❌ Falha ao injetar texto: {}", e);
+                                } else {
+                                    log::info!("✅ Texto injetado com sucesso");
                                 }
                             }
                             
                             log::info!("✅ Pronto para nova gravação");
                         }
                     }
-                    HotkeyEvent::Transcript(text) => {
-                        log::debug!("📝 Transcrição recebida: {}", text);
-                        let mut transcript = current_transcript.lock().unwrap();
-                        *transcript = text;
-                    }
                 }
             }
+            
+            // Transcrições do Web Speech API
+            Some(text) = transcript_rx.recv() => {
+                log::debug!("📝 Transcrição recebida: {}", text);
+                let mut transcript = current_transcript.lock().unwrap();
+                *transcript = text;
+            }
+            
             // Ctrl+C handling
             _ = tokio::signal::ctrl_c() => {
                 log::info!("\n👋 Encerrando VoiceHub Daemon...");
@@ -102,5 +130,4 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 #[derive(Debug, Clone)]
 pub enum HotkeyEvent {
     Toggle,
-    Transcript(String),
 }

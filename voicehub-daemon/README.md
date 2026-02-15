@@ -7,10 +7,12 @@
 ## ✨ Features
 
 - ✅ **Hotkey Global**: Super+H funciona em qualquer tela, qualquer aplicativo
+- ✅ **Web Speech API**: Reconhecimento de voz 100% gratuito (sem API keys)
 - ✅ **Cross-Desktop**: COSMIC, GNOME, KDE, i3, Sway, Hyprland, etc.
 - ✅ **Wayland Nativo**: Usa evdev diretamente (sem X11)
 - ✅ **Injeção de Texto**: Via ydotool (Wayland-friendly)
-- ✅ **Leve**: Binário de ~2.8MB
+- ✅ **Português BR**: Suporte nativo para português brasileiro
+- ✅ **Leve**: Binário de ~3MB
 - ✅ **Async**: Rust + Tokio para performance
 
 ---
@@ -23,19 +25,24 @@
 # 1. Instalar ydotool
 sudo pacman -S ydotool
 
-# 2. Iniciar serviço ydotool
+# 2. Instalar webkit2gtk (para Web Speech API)
+sudo pacman -S webkit2gtk-4.1
+
+# 3. Iniciar serviço ydotool
 sudo systemctl enable --now ydotoold
 
-# 3. Adicionar usuário ao grupo input
+# 4. Adicionar usuário ao grupo input
 sudo usermod -aG input $USER
 
-# 4. Logout e login para aplicar grupo
+# 5. Logout e login para aplicar grupo
 ```
 
 ### Compilar
 
 ```bash
 cargo build --release
+# OU com bun
+bun run --bun cargo build --release
 ```
 
 O binário será gerado em `target/release/voicehub-daemon`
@@ -43,6 +50,13 @@ O binário será gerado em `target/release/voicehub-daemon`
 ---
 
 ## 📋 Uso
+
+### Teste Rápido
+
+```bash
+# Rodar script de teste (recomendado)
+./test-daemon.sh
+```
 
 ### Executar Daemon
 
@@ -56,20 +70,24 @@ RUST_LOG=debug ./target/release/voicehub-daemon
 
 ### Como Usar
 
-1. **Pressione Super+H** - Inicia gravação
-2. **Fale naturalmente** - O texto será transcrito
-3. **Pressione Super+H novamente** - Para gravação e injeta texto
+1. **Abra um editor de texto** (gedit, kate, mousepad, VSCode, etc.)
+2. **Clique no campo de texto** para focar
+3. **Pressione Super+H** - Inicia gravação de voz
+4. **Fale naturalmente em português** - O texto será transcrito em tempo real
+5. **Pressione Super+H novamente** - Para gravação e injeta texto no campo ativo
 
-O texto transcrito será automaticamente inserido no campo de texto ativo (onde o cursor está).
+O texto transcrito será automaticamente inserido onde o cursor está.
 
 ---
 
 ## 🛠️ Tecnologias
 
 - **hotkey-listener** 0.3 - Wayland-native global hotkeys via evdev
+- **webkit2gtk** 2.0 - Headless WebView para Web Speech API
+- **gtk** 0.18 - GTK bindings para Rust
 - **ydotool** - Text injection (Wayland)
 - **tokio** - Async runtime
-- **tray-icon** - System tray (cross-desktop)
+- **tray-icon** 0.18 - System tray (cross-desktop) - *futuro*
 
 ---
 
