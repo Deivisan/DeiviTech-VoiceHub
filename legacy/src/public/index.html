@@ -259,6 +259,17 @@
             color: var(--error);
         }
 
+        .btn-confirm {
+            background: linear-gradient(135deg, var(--success), #27ae60);
+            color: white;
+            border: 1px solid var(--success);
+        }
+
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(46, 204, 113, 0.4);
+        }
+
         /* VISUALIZER */
         .visualizer-container {
             background: rgba(0, 0, 0, 0.3);
@@ -479,6 +490,10 @@
                 <button id="stopBtn" class="btn btn-stop" disabled>
                     <span>⏹️</span>
                     <span>Parar</span>
+                </button>
+                <button id="confirmBtn" class="btn btn-confirm" title="Confirmar fala atual e proteger texto (Ctrl+D)">
+                    <span>✅</span>
+                    <span>Confirmar Fala</span>
                 </button>
                 <button id="copyBtn" class="btn btn-copy">
                     <span>📋</span>

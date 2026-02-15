@@ -58,6 +58,7 @@ class VoiceHub {
         document.getElementById('copyBtn').addEventListener('click', () => this.copyToClipboard());
         document.getElementById('clearBtn').addEventListener('click', () => this.clearEditor());
         document.getElementById('injectBtn').addEventListener('click', () => this.injectText());
+        document.getElementById('confirmBtn').addEventListener('click', () => this.confirmCurrentSpeech());
 
         // Settings toggle - FIX: Actually toggle visibility
         document.getElementById('settingsToggle').addEventListener('click', () => {
@@ -96,6 +97,11 @@ class VoiceHub {
             if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'X') {
                 e.preventDefault();
                 this.clearEditor();
+            }
+            // Ctrl/Cmd + D: Confirmar fala atual (snapshot)
+            if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+                e.preventDefault();
+                this.confirmCurrentSpeech();
             }
         });
     }
@@ -400,6 +406,40 @@ class VoiceHub {
         this.updateWordCount();
         this.saveSession();
         this.showToast('✅ Editor limpo! Sessões antigas apagadas.', 'success');
+    }
+
+    confirmCurrentSpeech() {
+        // 🎯 SNAPSHOT IMUTÁVEL: Confirma texto atual e NUNCA sobrescreve
+        const editor = document.getElementById('editor');
+        const currentText = editor.value.replace(/\n\[interim\].*$/, '').trim();
+        
+        if (!currentText) {
+            this.showToast('⚠️ Nenhum texto para confirmar', 'warning');
+            return;
+        }
+
+        // Salvar texto confirmado (imutável)
+        this.accumulatedTranscript = currentText + '\n\n━━━━━━ Nova Fala ━━━━━━\n\n';
+        
+        // Reset recognition para nova sessão
+        if (this.recognition && this.isRecording) {
+            this.recognition.stop();
+            this.lastProcessedIndex = 0;
+            
+            // Reiniciar recognition imediatamente para nova fala
+            setTimeout(() => {
+                if (this.isRecording) {
+                    this.recognition.start();
+                }
+            }, 100);
+        }
+        
+        // Atualizar editor com separador
+        editor.value = this.accumulatedTranscript;
+        this.updateWordCount();
+        this.saveSession();
+        
+        this.showToast('✅ Fala confirmada! Texto anterior protegido.', 'success');
     }
 
     setStatus(text, active) {
