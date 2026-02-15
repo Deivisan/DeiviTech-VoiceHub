@@ -133,9 +133,18 @@ class VoiceHub {
             // Setup audio visualizer
             this.setupVisualizer();
 
-            // Reset transcript tracking - FIX: Initialize state properly
+            // Reset transcript tracking - FIX: Separate sessions properly
             this.lastProcessedIndex = 0;
-            this.accumulatedTranscript = document.getElementById('editor').value || '';
+            
+            // FIX: Se há conteúdo no editor, criar nova sessão separada
+            const editorContent = document.getElementById('editor').value.trim();
+            if (editorContent && !editorContent.endsWith('[interim]')) {
+                // Adicionar separador visual entre sessões
+                this.accumulatedTranscript = editorContent + '\n\n━━━━━━ Nova Fala ━━━━━━\n\n';
+            } else {
+                // Editor vazio ou apenas interim - iniciar limpo
+                this.accumulatedTranscript = '';
+            }
 
             // Start Web Speech API
             this.startWebSpeechRecording();
@@ -383,12 +392,14 @@ class VoiceHub {
             return;
         }
 
+        // FIX: Limpar TUDO incluindo acumulado
+        // Isso garante que sessões antigas não ressuscitem
         editor.value = '';
         this.accumulatedTranscript = '';
         this.lastProcessedIndex = 0;
         this.updateWordCount();
         this.saveSession();
-        this.showToast('✅ Editor limpo!', 'success');
+        this.showToast('✅ Editor limpo! Sessões antigas apagadas.', 'success');
     }
 
     setStatus(text, active) {

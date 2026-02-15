@@ -1,0 +1,1 @@
+/home/deivi/Projetos/DeiviTech-VoiceHub/voicehub-daemon/target/release/voicehub-daemon: /home/deivi/Projetos/DeiviTech-VoiceHub/voicehub-daemon/src/hotkey.rs /home/deivi/Projetos/DeiviTech-VoiceHub/voicehub-daemon/src/inject.rs /home/deivi/Projetos/DeiviTech-VoiceHub/voicehub-daemon/src/main.rs

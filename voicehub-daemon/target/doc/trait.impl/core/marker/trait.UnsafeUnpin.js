@@ -1,0 +1,9 @@
+(function() {
+    var implementors = Object.fromEntries([["hotkey_listener",[["impl UnsafeUnpin for <a class=\"enum\" href=\"hotkey_listener/enum.HotkeyEvent.html\" title=\"enum hotkey_listener::HotkeyEvent\">HotkeyEvent</a>",1,["hotkey_listener::event::HotkeyEvent"]],["impl UnsafeUnpin for <a class=\"enum\" href=\"hotkey_listener/enum.Key.html\" title=\"enum hotkey_listener::Key\">Key</a>",1,["hotkey_listener::key::Key"]],["impl UnsafeUnpin for <a class=\"struct\" href=\"hotkey_listener/struct.Hotkey.html\" title=\"struct hotkey_listener::Hotkey\">Hotkey</a>",1,["hotkey_listener::hotkey::Hotkey"]],["impl UnsafeUnpin for <a class=\"struct\" href=\"hotkey_listener/struct.HotkeyListener.html\" title=\"struct hotkey_listener::HotkeyListener\">HotkeyListener</a>",1,["hotkey_listener::listener::HotkeyListener"]],["impl UnsafeUnpin for <a class=\"struct\" href=\"hotkey_listener/struct.HotkeyListenerBuilder.html\" title=\"struct hotkey_listener::HotkeyListenerBuilder\">HotkeyListenerBuilder</a>",1,["hotkey_listener::listener::HotkeyListenerBuilder"]],["impl UnsafeUnpin for <a class=\"struct\" href=\"hotkey_listener/struct.HotkeyListenerHandle.html\" title=\"struct hotkey_listener::HotkeyListenerHandle\">HotkeyListenerHandle</a>",1,["hotkey_listener::listener::HotkeyListenerHandle"]],["impl UnsafeUnpin for <a class=\"struct\" href=\"hotkey_listener/struct.Modifiers.html\" title=\"struct hotkey_listener::Modifiers\">Modifiers</a>",1,["hotkey_listener::hotkey::Modifiers"]]]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":57,"fragment_lengths":[1432]}

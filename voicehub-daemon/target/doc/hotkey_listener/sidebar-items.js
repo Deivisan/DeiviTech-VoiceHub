@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["HotkeyEvent","Key"],"fn":["find_keyboards","parse_hotkey"],"struct":["Hotkey","HotkeyListener","HotkeyListenerBuilder","HotkeyListenerHandle","Modifiers"]};
