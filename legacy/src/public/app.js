@@ -390,22 +390,26 @@ class VoiceHub {
     }
 
     clearEditor() {
-        // FIX: NO CONFIRMATION - just clear immediately
         const editor = document.getElementById('editor');
-        
-        if (!editor.value.trim()) {
-            this.showToast('⚠️ Editor já está vazio', 'warning');
-            return;
-        }
 
-        // FIX: Limpar TUDO incluindo acumulado
-        // Isso garante que sessões antigas não ressuscitem
+        // FIX: Limpar TUDO incluindo acumulado + RESET recognition
         editor.value = '';
         this.accumulatedTranscript = '';
         this.lastProcessedIndex = 0;
+        
+        // RESET recognition para nova sessão limpa
+        if (this.recognition && this.isRecording) {
+            this.recognition.stop();
+            setTimeout(() => {
+                if (this.isRecording) {
+                    this.recognition.start();
+                }
+            }, 100);
+        }
+        
         this.updateWordCount();
         this.saveSession();
-        this.showToast('✅ Editor limpo! Sessões antigas apagadas.', 'success');
+        this.showToast('✅ Editor limpo! Nova sessão iniciada.', 'success');
     }
 
     confirmCurrentSpeech() {
@@ -418,8 +422,8 @@ class VoiceHub {
             return;
         }
 
-        // Salvar texto confirmado (imutável)
-        this.accumulatedTranscript = currentText + '\n\n━━━━━━ Nova Fala ━━━━━━\n\n';
+        // Salvar texto confirmado (imutável) com separador simples
+        this.accumulatedTranscript = currentText + '\n\n______________\n\n';
         
         // Reset recognition para nova sessão
         if (this.recognition && this.isRecording) {
